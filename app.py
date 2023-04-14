@@ -14,6 +14,33 @@ hide_st_style = """
             """
 st.markdown(hide_st_style, unsafe_allow_html=True)
 
+
+st.markdown('<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">', unsafe_allow_html=True)
+# background-color: #ed9439;
+st.markdown("""
+<style>
+.navbar {
+  height: 80px;
+  background-color: #ed9439;
+  color: #ed9439;
+}
+.navbar-brand{
+    font-size: 40px;
+    margin-left:40px;
+}
+</style>""", unsafe_allow_html= True)
+
+
+st.markdown("""
+<nav class="navbar fixed-top navbar-expand-lg navbar-dark">
+  <a class="navbar-brand" href="https://catsci-sst-visualization.streamlit.app/" target="_blank">CatSci</a>
+  
+
+</nav>
+""", unsafe_allow_html=True)
+
+
+
 st.markdown("""
 <style>
 div.stButton > button:first-child {
