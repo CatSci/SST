@@ -1,4 +1,4 @@
 from_root
-flask
 openpyxl
+streamlit==1.12.0
 -e .
