@@ -8,29 +8,6 @@ import streamlit as st
 from io import StringIO
 
 
-# def clean_dataframe(files: list):
-#      for excel_file in files:
-#         if excel_file is not None:
-#             # read the contents of the uploaded file using StringIO
-#             csv_contents = StringIO(excel_file.getvalue().decode('utf-8'))
-
-#             # read the CSV data using csv.reader
-#             csv_reader = csv.reader(csv_contents)
-
-#             clean_data_dict = {}
-#             column_name = {}
-#             data_columns_len = 0
-#             for idx, row in enumerate(csv_reader):
-#                 if len(row) != 0 and row[0] == 'Name':
-#                     column_name['names'] = row
-#                     data_columns_len = len(row)
-
-#                 elif len(row) != 0 and len(row) == data_columns_len:
-#                     if row[0].split('C')[0] == 'Q':
-#                         clean_data_dict[idx] = row
-            
-#             st.write(clean_data_dict)
-
 def clean_dataframe(files: list):
     all_df = []
     try:

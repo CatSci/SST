@@ -3,8 +3,6 @@ import os, sys
 import streamlit as st
 
 
-# folder = './sst/data/'
-# files = os.listdir('./sst/data/')
 
 # hide streamlit style
 hide_st_style = """
