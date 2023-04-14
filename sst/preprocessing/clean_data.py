@@ -12,6 +12,9 @@ def clean_dataframe(folder: str, files: list):
     all_df = []
     try:
         logging.info(f"[INFO] Cleaning Excel files started")
+        progress_bar = st.progress(0)
+        status_text = st.empty()
+        merged_df = pd.DataFrame()
         for i in range(len(files)):
             with open(folder + files[i], 'r') as file:
                 csv_reader = csv.reader(file)
@@ -36,7 +39,12 @@ def clean_dataframe(folder: str, files: list):
             value = files[i].split('.csv')[0])
 
             all_df.append(df)
+            progress = (i + 1) / len(files)
+            progress_bar.progress(progress)
+            status_text.text(f"{int(progress*100)}% Cleaning Data Completed")
         
+        progress_bar.empty()
+        status_text.empty()
         logging.info(f"[INFO] Cleaning Excel files completed")
         return all_df
 
@@ -48,13 +56,21 @@ def clean_dataframe(folder: str, files: list):
 def merge_dataframe(folder: str, files: str) -> pd.DataFrame:
     try:
         logging.info(f"[INFO] Merging all individual dataframe into singal dataframe started")
-        merged_df = pd.DataFrame()
         all_df = clean_dataframe(folder= folder, files= files)
+        progress_bar = st.progress(0)
+        status_text = st.empty()
+        merged_df = pd.DataFrame()
         # Merge DataFrames
-        for df in all_df:
+        for i, df in enumerate(all_df):
             merged_df = pd.concat([merged_df, df], ignore_index=True)
+            progress = (i + 1) / len(all_df)
+            progress_bar.progress(progress)
+            status_text.text(f"{int(progress*100)}% Merging all files Completed")
 
+        progress_bar.empty()
+        status_text.empty()
         logging.info(f"[INFO] Merging all individual dataframe into singal dataframe completed")
+
         return merged_df
 
     except Exception as e:
