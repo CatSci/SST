@@ -3,8 +3,8 @@ import os, sys
 import streamlit as st
 
 
-folder = './sst/data/'
-files = os.listdir('./sst/data/')
+# folder = './sst/data/'
+# files = os.listdir('./sst/data/')
 
 # hide streamlit style
 hide_st_style = """
@@ -37,7 +37,7 @@ st.info('Please make sure to upload **all files** !!')
 excel_files = st.file_uploader("Choose all CSV files", accept_multiple_files= True, type= ['csv'])
 
 if st.button('Clean Data'):
-    df = merge_dataframe(folder= folder, files= files)
+    df = merge_dataframe(files= excel_files)
     st.dataframe(df)
 
 # if __name__ == "__main__":
