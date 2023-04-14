@@ -43,8 +43,8 @@ def clean_dataframe(folder: str, files: list):
             progress_bar.progress(progress)
             status_text.text(f"{int(progress*100)}% Cleaning Data Completed")
         
-#         progress_bar.empty()
-#         status_text.empty()
+        progress_bar.empty()
+        status_text.empty()
         logging.info(f"[INFO] Cleaning Excel files completed")
         return all_df
 
@@ -67,8 +67,8 @@ def merge_dataframe(folder: str, files: str) -> pd.DataFrame:
             progress_bar.progress(progress)
             status_text.text(f"{int(progress*100)}% Merging all files Completed")
 
-#         progress_bar.empty()
-#         status_text.empty()
+        progress_bar.empty()
+        status_text.empty()
         logging.info(f"[INFO] Merging all individual dataframe into singal dataframe completed")
 
         return merged_df
