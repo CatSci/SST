@@ -1,6 +1,10 @@
 from sst.preprocessing.clean_data import merge_dataframe
+from sst.preprocessing.control_chart import control_chart, split_dataframe, plot_control_chart
 import os, sys
 import streamlit as st
+import seaborn as sns
+import pandas as pd
+import matplotlib.pyplot as plt
 
 
 
@@ -61,9 +65,55 @@ st.info('Please make sure to upload **all files** !!')
 
 excel_files = st.file_uploader("Choose all CSV files", accept_multiple_files= True, type= ['csv'])
 
-if st.button('Clean Data'):
-    df = merge_dataframe(files= excel_files)
-    st.dataframe(df)
+if excel_files is not None:
+  df = merge_dataframe(files= excel_files)
+  if "File Name" in df.columns:
+    df["Time"] = df["File Name"].str.extract(r"(\d{4}-\d{2}-\d{2} \d{2}-\d{2}-\d{2})")
+    df["Date"] = df["File Name"].str.extract(r"(\d{4}-\d{2}-\d{2})")
 
-# if __name__ == "__main__":
-#     df = merge_dataframe(folder= folder, files= files)
+
+if st.button('Single Control Chart'):
+  mean, upper_limit, lower_limit = control_chart(data= df, column_name= 'Area')
+  sns.set_style('darkgrid')
+  plot_control_chart(dataframe= df,
+                      upper_limit= upper_limit,
+                      mean= mean,
+                      lower_limit= lower_limit,
+                      category = 'Complete Data',
+                      y_axis= 'Area',
+                      x_axis = 'Time',
+                      x_axis_sep= 10)
+  
+
+
+
+if st.button('Multiple Control Charts'):
+    # splitting dataframes
+    split_dataframes = split_dataframe(df= df, column_name= 'Name')
+    # Accessing the individual dataframes
+    for category, dataframe in split_dataframes.items():
+        st.write()
+        dataframe['Area'] = pd.to_numeric(dataframe['Area'], errors='coerce')
+
+        normalized_area = (dataframe['Area'] - dataframe['Area'].mean()) / dataframe['Area'].std()
+        dataframe['Normalized Area'] = normalized_area
+
+        mean, upper_limit, lower_limit = control_chart(data= dataframe, column_name= 'Normalized Area')
+        sns.set_style('darkgrid')
+
+        plot_control_chart(dataframe= dataframe,
+                           upper_limit= upper_limit,
+                           mean= mean,
+                           lower_limit= lower_limit,
+                           category= category,
+                           y_axis= 'Normalized Area',
+                           x_axis = 'Time',
+                           x_axis_sep= 3)
+
+        
+
+
+
+
+ 
+

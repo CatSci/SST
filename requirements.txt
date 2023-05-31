@@ -1,4 +1,5 @@
 from_root
 openpyxl
+seaborn
 streamlit==1.12.0
 -e .
