@@ -2,6 +2,7 @@ import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
 import streamlit as st
+import plotly.graph_objects as go
 
 
 def split_dataframe(df, column_name):
@@ -29,32 +30,46 @@ def plot_control_chart(dataframe,
                        upper_limit,
                        mean,
                        lower_limit,
-                       category = 'Complete Data',
-                       y_axis = 'Normalized Area',
-                       x_axis = 'Date',
+                       category,
+                       y_axis,
+                       x_axis,
                        x_axis_sep = 3):
+        # Create the Plotly figure
+    fig = go.Figure()
+
+    # Define the hover template
+    hover_template = '<b>Date:</b> %{x}<br><b>Area:</b> %{customdata[0]}<br>' \
+                     '<b>Tailing:</b> %{customdata[1]}<br>' \
+                     '<b>RT [min]:</b> %{customdata[2]}<extra></extra>'
+
     # Plot the data
-    fig, ax = plt.subplots()
-    sns.lineplot(x= x_axis, y=y_axis, data=dataframe, marker= 'o', markersize = 4, color = 'purple')
+    fig.add_trace(go.Scatter(
+        x=dataframe[x_axis],
+        y=dataframe[y_axis],
+        mode='lines+markers',
+        marker=dict(size=6, color='#ed9439'),
+        hovertemplate=hover_template,
+        customdata=dataframe[['Area','Tailing', 'RT [min]']].values,
+    ))
 
-    # Plot the control limits
-    ax.axhline(upper_limit, color='red', linestyle='--')
-    ax.axhline(mean, color='green', linestyle='--')
-    ax.axhline(lower_limit, color='blue', linestyle='--')
-    plt.xticks(dataframe['Time'][::x_axis_sep], rotation = 45)
+ # Plot the control limits as horizontal lines
+     # Add vertical lines for control limits
+    fig.add_hline(y=upper_limit, line_width=3, line_dash="dash", line_color="red", name='Upper Control Limit')
+    fig.add_hline(y=mean, line_width=3, line_dash="dash", line_color="green", name='Mean')
+    fig.add_hline(y=lower_limit, line_width=3, line_dash="dash", line_color="blue", name='Lower Control Limit')
 
-        # Add labels with fixed position
-    ax.text(0.01, upper_limit + 0.2, 'Upper Control Limit', color='red')
-    ax.text(0.01, mean + 0.2, 'Mean', color='green')
-    ax.text(0.01, lower_limit + 0.2, 'Lower Control Limit', color='blue')
 
-    # Add labels and title
-    ax.set_xlabel(x_axis)
-    ax.set_ylabel(y_axis)
-    ax.set_title(f"Control Chart for {category}")
+    # Customize x-axis tick labels
+    fig.update_layout(xaxis=dict(tickmode='array', tickvals=dataframe[x_axis][::x_axis_sep], tickangle=45))
 
-    # Add legend
-    ax.legend()
+    # Set axis labels and title
+    fig.update_layout(xaxis_title=x_axis, yaxis_title=y_axis, title=f"Control Chart for {category}")
 
-    # Display the plot
-    st.pyplot(fig)
+
+    fig.update_layout(
+    hoverlabel=dict(
+        bgcolor="white",
+        font_color="purple",))
+    
+    # Render the plot
+    st.plotly_chart(fig, use_container_width=True)

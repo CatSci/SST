@@ -1,10 +1,13 @@
 from sst.preprocessing.clean_data import merge_dataframe
 from sst.preprocessing.control_chart import control_chart, split_dataframe, plot_control_chart
+from sst.preprocessing.filters import filter_dataframe, filter_y_axis
+
 import os, sys
 import streamlit as st
 import seaborn as sns
 import pandas as pd
 import matplotlib.pyplot as plt
+import plotly.express as px
 
 
 
@@ -63,52 +66,86 @@ st.title("SST Visualization")
 st.info('Please make sure to upload **all files** !!')
 
 
-excel_files = st.file_uploader("Choose all CSV files", accept_multiple_files= True, type= ['csv'])
+# Define a session state variable to track if merging and preprocessing have been done
+if "merged_done" not in st.session_state:
+    st.session_state["merged_done"] = False
+
+# Initialize the "merged_df" key in session state to an empty dataframe
+if "merged_df" not in st.session_state:
+    st.session_state["merged_df"] = pd.DataFrame()
+
+
+excel_files = st.file_uploader("Choose all CSV files", accept_multiple_files=True, type=['csv'])
+
 
 if excel_files is not None:
-  df = merge_dataframe(files= excel_files)
-  if "File Name" in df.columns:
-    df["Time"] = df["File Name"].str.extract(r"(\d{4}-\d{2}-\d{2} \d{2}-\d{2}-\d{2})")
-    df["Date"] = df["File Name"].str.extract(r"(\d{4}-\d{2}-\d{2})")
+    if not st.session_state["merged_done"]:
+        merged_df = merge_dataframe(files=excel_files)
+
+    df = merged_df.copy()  # Create a copy of the merged dataframe
+    if "File Name" in df.columns:
+        df["Time"] = df["File Name"].str.extract(r"(\d{4}-\d{2}-\d{2} \d{2}-\d{2}-\d{2})")
+        df["Date"] = df["File Name"].str.extract(r"(\d{4}-\d{2}-\d{2})")
 
 
-if st.button('Single Control Chart'):
-  mean, upper_limit, lower_limit = control_chart(data= df, column_name= 'Area')
-  sns.set_style('darkgrid')
-  plot_control_chart(dataframe= df,
-                      upper_limit= upper_limit,
-                      mean= mean,
-                      lower_limit= lower_limit,
-                      category = 'Complete Data',
-                      y_axis= 'Area',
-                      x_axis = 'Time',
-                      x_axis_sep= 10)
+        df, user_cat_input = filter_dataframe(df=df)
+        # select what to display on y axis
+        y_label = filter_y_axis()
+
+        normalize_bool = st.checkbox('Do you want to normalize the data')
+    
+
+
+
+# if st.button('Single Control Chart'):
+#   mean, upper_limit, lower_limit = control_chart(data= df, column_name= 'Area')
+#   sns.set_style('darkgrid')
+#   plot_control_chart(dataframe= df,
+#                       upper_limit= upper_limit,
+#                       mean= mean,
+#                       lower_limit= lower_limit,
+#                       category = 'Complete Data',
+#                       y_axis= 'Area',
+#                       x_axis = 'Time',
+#                       x_axis_sep= 10)
   
-
 
 
 if st.button('Multiple Control Charts'):
     # splitting dataframes
+    # st.write(df)
     split_dataframes = split_dataframe(df= df, column_name= 'Name')
     # Accessing the individual dataframes
-    for category, dataframe in split_dataframes.items():
-        st.write()
+    for category in user_cat_input:
+        dataframe = df[df['Name'] == category]
+        
         dataframe['Area'] = pd.to_numeric(dataframe['Area'], errors='coerce')
+        if normalize_bool:
+          normalized_area = (dataframe['Area'] - dataframe['Area'].mean()) / dataframe['Area'].std()
+          dataframe['Normalized Area'] = normalized_area
+          mean, upper_limit, lower_limit = control_chart(data= dataframe, column_name= 'Normalized Area')
+          sns.set_style('darkgrid')
 
-        normalized_area = (dataframe['Area'] - dataframe['Area'].mean()) / dataframe['Area'].std()
-        dataframe['Normalized Area'] = normalized_area
+          plot_control_chart(dataframe= dataframe,
+                            upper_limit= upper_limit,
+                            mean= mean,
+                            lower_limit= lower_limit,
+                            category= category,
+                            y_axis= 'Normalized Area',
+                            x_axis = 'Time',
+                            x_axis_sep= 3)
+        else:
+          mean, upper_limit, lower_limit = control_chart(data= dataframe, column_name= y_label)
+          sns.set_style('darkgrid')
 
-        mean, upper_limit, lower_limit = control_chart(data= dataframe, column_name= 'Normalized Area')
-        sns.set_style('darkgrid')
-
-        plot_control_chart(dataframe= dataframe,
-                           upper_limit= upper_limit,
-                           mean= mean,
-                           lower_limit= lower_limit,
-                           category= category,
-                           y_axis= 'Normalized Area',
-                           x_axis = 'Time',
-                           x_axis_sep= 3)
+          plot_control_chart(dataframe= dataframe,
+                            upper_limit= upper_limit,
+                            mean= mean,
+                            lower_limit= lower_limit,
+                            category= category,
+                            y_axis= y_label,
+                            x_axis = 'Time',
+                            x_axis_sep= 3)
 
         
 

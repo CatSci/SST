@@ -55,7 +55,6 @@ def clean_dataframe(files: list):
         logging.error(f"[ERROR] Error occurred in clean_dataframe function !!")
         raise SSTException(e, sys)
 
-
 def merge_dataframe(files: str) -> pd.DataFrame:
     try:
         logging.info(f"[INFO] Merging all individual dataframe into singal dataframe started")
