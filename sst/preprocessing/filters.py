@@ -39,3 +39,10 @@ def filter_y_axis():
 
     return y_label
 
+
+def filter_x_axis():
+    values = ['Time']
+    x_label = st.selectbox('Select data for X axis', (values))
+
+    return x_label
+

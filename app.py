@@ -1,6 +1,6 @@
 from sst.preprocessing.clean_data import merge_dataframe
 from sst.preprocessing.control_chart import control_chart, split_dataframe, plot_control_chart
-from sst.preprocessing.filters import filter_dataframe, filter_y_axis
+from sst.preprocessing.filters import filter_dataframe, filter_y_axis, filter_x_axis
 
 import os, sys
 import streamlit as st
@@ -91,6 +91,7 @@ if excel_files is not None:
         df, user_cat_input = filter_dataframe(df=df)
         # select what to display on y axis
         y_label = filter_y_axis()
+        x_label = filter_x_axis()
 
         normalize_bool = st.checkbox('Do you want to normalize the data')
     
@@ -119,11 +120,12 @@ if st.button('Multiple Control Charts'):
     for category in user_cat_input:
         dataframe = df[df['Name'] == category]
         
-        dataframe['Area'] = pd.to_numeric(dataframe['Area'], errors='coerce')
+        col = 'Normalized' + ' ' + y_label
+        dataframe[y_label] = pd.to_numeric(dataframe[y_label], errors='coerce')
         if normalize_bool:
-          normalized_area = (dataframe['Area'] - dataframe['Area'].mean()) / dataframe['Area'].std()
-          dataframe['Normalized Area'] = normalized_area
-          mean, upper_limit, lower_limit = control_chart(data= dataframe, column_name= 'Normalized Area')
+          normalized_area = (dataframe[y_label] - dataframe[y_label].mean()) / dataframe[y_label].std()
+          dataframe[col] = normalized_area
+          mean, upper_limit, lower_limit = control_chart(data= dataframe, column_name= col)
           sns.set_style('darkgrid')
 
           plot_control_chart(dataframe= dataframe,
@@ -131,8 +133,8 @@ if st.button('Multiple Control Charts'):
                             mean= mean,
                             lower_limit= lower_limit,
                             category= category,
-                            y_axis= 'Normalized Area',
-                            x_axis = 'Time',
+                            y_axis= col,
+                            x_axis = x_label,
                             x_axis_sep= 3)
         else:
           mean, upper_limit, lower_limit = control_chart(data= dataframe, column_name= y_label)
@@ -144,7 +146,7 @@ if st.button('Multiple Control Charts'):
                             lower_limit= lower_limit,
                             category= category,
                             y_axis= y_label,
-                            x_axis = 'Time',
+                            x_axis = x_label,
                             x_axis_sep= 3)
 
         
