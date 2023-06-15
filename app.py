@@ -114,7 +114,7 @@ if excel_files is not None:
 
 if st.button('Multiple Control Charts'):
     # splitting dataframes
-    # st.write(df)
+    df = df.sort_values(by='Time', ascending=True)
     split_dataframes = split_dataframe(df= df, column_name= 'Name')
     # Accessing the individual dataframes
     for category in user_cat_input:
