@@ -78,76 +78,49 @@ if "merged_df" not in st.session_state:
 excel_files = st.file_uploader("Choose all CSV files", accept_multiple_files=True, type=['csv'])
 
 
-if excel_files is not None:
-    if not st.session_state["merged_done"]:
+if len(excel_files) > 0:
+    if not st.session_state.get("merged_done"):
         merged_df = merge_dataframe(files=excel_files)
+        st.session_state["merged_df"] = merged_df
+        st.session_state["merged_done"] = True
+    else:
+        merged_df = st.session_state.get("merged_df")
 
-    df = merged_df.copy()  # Create a copy of the merged dataframe
-    if "File Name" in df.columns:
-        df["Time"] = df["File Name"].str.extract(r"(\d{4}-\d{2}-\d{2} \d{2}-\d{2}-\d{2})")
-        df["Date"] = df["File Name"].str.extract(r"(\d{4}-\d{2}-\d{2})")
+    if merged_df is not None:
+        df = merged_df.copy()  # Create a copy of the merged dataframe
+        if "File Name" in df.columns:
+            df["Time"] = df["File Name"].str.extract(r"(\d{4}-\d{2}-\d{2} \d{2}-\d{2}-\d{2})")
+            df["date_format"] = df["File Name"].str.extract(r"(\d{4}-\d{2}-\d{2})")
 
-
-        df, user_cat_input = filter_dataframe(df=df)
-        # select what to display on y axis
+        df = filter_dataframe(df=df)
+        user_cat_input = df['Name'].unique()
         y_label = filter_y_axis()
         x_label = filter_x_axis()
-
-        normalize_bool = st.checkbox('Do you want to normalize the data')
-    
-
-
-
-# if st.button('Single Control Chart'):
-#   mean, upper_limit, lower_limit = control_chart(data= df, column_name= 'Area')
-#   sns.set_style('darkgrid')
-#   plot_control_chart(dataframe= df,
-#                       upper_limit= upper_limit,
-#                       mean= mean,
-#                       lower_limit= lower_limit,
-#                       category = 'Complete Data',
-#                       y_axis= 'Area',
-#                       x_axis = 'Time',
-#                       x_axis_sep= 10)
-  
 
 
 if st.button('Multiple Control Charts'):
     # splitting dataframes
     df = df.sort_values(by='Time', ascending=True)
+    df['Time'] = pd.to_datetime(df['Time'], format='%Y-%m-%d %H-%M-%S')
+    df['Date'] = df['Time'].dt.strftime('%d %B %Y %H:%M')
+    # st.write(df)
     split_dataframes = split_dataframe(df= df, column_name= 'Name')
     # Accessing the individual dataframes
     for category in user_cat_input:
         dataframe = df[df['Name'] == category]
         
-        col = 'Normalized' + ' ' + y_label
         dataframe[y_label] = pd.to_numeric(dataframe[y_label], errors='coerce')
-        if normalize_bool:
-          normalized_area = (dataframe[y_label] - dataframe[y_label].mean()) / dataframe[y_label].std()
-          dataframe[col] = normalized_area
-          mean, upper_limit, lower_limit = control_chart(data= dataframe, column_name= col)
-          sns.set_style('darkgrid')
+        mean, upper_limit, lower_limit = control_chart(data= dataframe, column_name= y_label)
+        sns.set_style('darkgrid')
 
-          plot_control_chart(dataframe= dataframe,
-                            upper_limit= upper_limit,
-                            mean= mean,
-                            lower_limit= lower_limit,
-                            category= category,
-                            y_axis= col,
-                            x_axis = x_label,
-                            x_axis_sep= 3)
-        else:
-          mean, upper_limit, lower_limit = control_chart(data= dataframe, column_name= y_label)
-          sns.set_style('darkgrid')
-
-          plot_control_chart(dataframe= dataframe,
-                            upper_limit= upper_limit,
-                            mean= mean,
-                            lower_limit= lower_limit,
-                            category= category,
-                            y_axis= y_label,
-                            x_axis = x_label,
-                            x_axis_sep= 3)
+        plot_control_chart(dataframe= dataframe,
+                        upper_limit= upper_limit,
+                        mean= mean,
+                        lower_limit= lower_limit,
+                        category= category,
+                        y_axis= y_label,
+                        x_axis = x_label,
+                        x_axis_sep= 3)
 
         
 
