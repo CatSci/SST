@@ -20,8 +20,8 @@ def control_chart(data, column_name):
     mean = data[column_name].mean()
     std = data[column_name].std()
 
-    upper_control_limit = mean + 3 * std
-    lower_control_limit = mean - 3 * std
+    upper_control_limit = mean + 2 * std
+    lower_control_limit = mean - 2 * std
 
     return mean, upper_control_limit, lower_control_limit
 
