@@ -8,7 +8,7 @@ import seaborn as sns
 import pandas as pd
 import matplotlib.pyplot as plt
 import plotly.express as px
-
+import datetime
 
 
 # hide streamlit style
@@ -74,6 +74,20 @@ if "merged_done" not in st.session_state:
 if "merged_df" not in st.session_state:
     st.session_state["merged_df"] = pd.DataFrame()
 
+# # Get current year
+# start_year = 2020
+# end_year = datetime.datetime.now().year + 10
+
+# # User input for the date range
+# date_range = st.date_input(
+#     "Select your vacation range",
+#     (datetime.date(start_year, 1, 1), datetime.date(start_year, 1, 7)),
+#     min_value=datetime.date(start_year, 1, 1),
+#     max_value=datetime.date(end_year, 12, 31),
+#     format="YYYY.MM.DD",
+# )
+
+# st.write(date_range)
 
 excel_files = st.file_uploader("Choose all CSV files", accept_multiple_files=True, type=['csv'])
 
@@ -100,13 +114,14 @@ if len(excel_files) > 0:
 
 if st.button('Multiple Control Charts'):
     # splitting dataframes
+    st.write(df)
     df = df.sort_values(by='Time', ascending=True)
     df['Time'] = pd.to_datetime(df['Time'], format='%Y-%m-%d %H-%M-%S')
     df['Date'] = df['Time'].dt.strftime('%d %B %Y %H:%M')
-    # st.write(df)
+    st.dataframe(df)
     split_dataframes = split_dataframe(df= df, column_name= 'Name')
     # Accessing the individual dataframes
-    for category in user_cat_input:
+    for category in sorted(user_cat_input):
         dataframe = df[df['Name'] == category]
         
         dataframe[y_label] = pd.to_numeric(dataframe[y_label], errors='coerce')

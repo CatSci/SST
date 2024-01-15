@@ -2,5 +2,5 @@ from_root
 openpyxl
 seaborn
 plotly
-streamlit==1.12.0
+streamlit
 -e .

@@ -1,0 +1,9 @@
+Sample Name,Plat 2A S1-EVENT
+Method Name,2A_S1_6mins_QC.amx
+Name,RT [min],Area,Height,USP Resolution,Tailing,SST
+QC1,0.33,71.2541,64.162,8.98,1.3,PASS
+QC3,1.18,95.6168,119.716,33.36,1.2,PASS
+QC4,3.11,225.7683,226.386,83.08,1.0,PASS
+Numb,3.00,,,,,
+All peaks not found
+
