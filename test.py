@@ -67,40 +67,41 @@ st.title("SST Visualization")
 st.info('Please make sure to upload **all files** !!')
 
 
-# # Define a session state variable to track if merging and preprocessing have been done
-# if "merged_done" not in st.session_state:
-#     st.session_state["merged_done"] = False
+# Define a session state variable to track if merging and preprocessing have been done
+if "merged_done" not in st.session_state:
+    st.session_state["merged_done"] = False
 
-# # Initialize the "merged_df" key in session state to an empty dataframe
-# if "merged_df" not in st.session_state:
-#     st.session_state["merged_df"] = pd.DataFrame()
+# Initialize the "merged_df" key in session state to an empty dataframe
+if "merged_df" not in st.session_state:
+    st.session_state["merged_df"] = pd.DataFrame()
 
 # Get current year
 start_year = 2023
 end_year = datetime.datetime.now().year + 10
 
 # # User input for the date range
+# date_range = st.date_input(
+#     "Select your vacation range",
+#     (
+#         datetime.date(start_year, 1, 1),
+#         datetime.date(start_year, 7, 1)
+#     ),
+#     min_value=datetime.date(start_year, 1, 1),
+#     max_value=datetime.date(end_year, 12, 1),
+#     format="DD.MM.YYYY"
+# )
+
+
+# User input for the date range
 date_range = st.date_input(
     "Select your vacation range",
     (
-        datetime.date(start_year, 1, 1),
-        datetime.date(start_year, 7, 1)
+        datetime.date(start_year, 10, 1),
+        datetime.date(start_year, 10, 31)
     ),
     min_value=datetime.date(start_year, 1, 1),
     max_value=datetime.date(end_year, 12, 1)
 )
-
-
-# User input for the date range
-# date_range = st.date_input(
-#     "Select your vacation range",
-#     (
-#         datetime.date(start_year, 10, 1),
-#         datetime.date(start_year, 10, 31)
-#     ),
-#     min_value=datetime.date(start_year, 1, 1),
-#     max_value=datetime.date(end_year, 12, 1)
-# )
 
 devices = {
     "Lancelot" : "DESKTOP-E75MDJA",

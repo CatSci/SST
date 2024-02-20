@@ -1,0 +1,133 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EDBO+</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.2.1/flowbite.min.css" rel="stylesheet" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.2.1/flowbite.min.js"></script>
+</head>
+
+<body class="min-h-screen bg-gradient-to-b from-gray-100 to-gray-300">
+
+    <!-- Navbar -->
+    <nav class="bg-white border-gray-200 h-28">
+        <div class="flex flex-wrap justify-between items-center mx-auto max-w-screen-xl p-4 h-8">
+            <a href="" class="flex items-center space-x-3 rtl:space-x-reverse">
+                <img src="{{ url_for('static', filename='catsci-black.svg') }}" class="h-16" alt="CatSci Logo" />
+            </a>
+
+        </div>
+    </nav>
+
+
+    <!-- Project name -->
+    <div class="flex flex-wrap justify-center items-center mx-auto max-w-screen-xl mt-4">
+        <div date-rangepicker class="flex items-center">
+            <div class="relative">
+                <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                    <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true"
+                        xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                        <path
+                            d="M20 4a2 2 0 0 0-2-2h-2V1a1 1 0 0 0-2 0v1h-3V1a1 1 0 0 0-2 0v1H6V1a1 1 0 0 0-2 0v1H2a2 2 0 0 0-2 2v2h20V4ZM0 18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8H0v10Zm5-8h10a1 1 0 0 1 0 2H5a1 1 0 0 1 0-2Z" />
+                    </svg>
+                </div>
+                <input name="start" type="text"
+                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 py-2.5  "
+                    placeholder="Select date start">
+            </div>
+            <span class="mx-4 text-gray-500">to</span>
+            <div class="relative">
+                <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                    <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true"
+                        xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                        <path
+                            d="M20 4a2 2 0 0 0-2-2h-2V1a1 1 0 0 0-2 0v1h-3V1a1 1 0 0 0-2 0v1H6V1a1 1 0 0 0-2 0v1H2a2 2 0 0 0-2 2v2h20V4ZM0 18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8H0v10Zm5-8h10a1 1 0 0 1 0 2H5a1 1 0 0 1 0-2Z" />
+                    </svg>
+                </div>
+                <input name="end" type="text"
+                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 py-2.5  "
+                    placeholder="Select date end">
+            </div>
+        </div>
+    </div>
+
+
+    <div class="flex flex-wrap justify-center items-center mx-auto max-w-screen-xl mt-10">
+
+        <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
+
+            <!-- Your button code remains unchanged -->
+            <button id="dropdownDefaultButton" data-dropdown-toggle="dropdown"
+                class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                type="button">Select Device <svg class="w-2.5 h-2.5 ms-3" aria-hidden="true"
+                    xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
+                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="m1 1 4 4 4-4" />
+                </svg>
+            </button>
+
+        </div>
+
+        <!-- Modified dropdown menu code -->
+        <div id="dropdown"
+            class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 absolute">
+            <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownDefaultButton">
+                <li>
+                    <a href="#" onclick="selectOption('Lancelot')"
+                        class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Lancelot</a>
+                </li>
+                <li>
+                    <a href="#" onclick="selectOption('Gromit')"
+                        class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Gromit</a>
+                </li>
+                <li>
+                    <a href="#" onclick="selectOption('Arthur dad')"
+                        class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Arthur dad</a>
+                </li>
+                <li>
+                    <a href="#" onclick="selectOption('Percy')"
+                        class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Percy</a>
+                </li>
+                <li>
+                    <a href="#" onclick="selectOption('Lancelot')"
+                        class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Wallace</a>
+                </li>
+                <li> 
+                    <a href="#" onclick="selectOption('Lancelot')"
+                        class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Merlin</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Display selected option -->
+    <div id="selectedOption" class="mt-4 text-center text-gray-700 dark:text-gray-200">
+        Selected Device: <span id="selectedOptionText"></span>
+    </div>
+
+
+
+    <script>
+        let currentSelection = 'Lancelot';
+        function selectOption(option) {
+            // Update the selected option text
+            document.getElementById('selectedOptionText').innerText = option;
+            
+            // Update the button content with the selected option and SVG
+            const button = document.getElementById('dropdownDefaultButton');
+            button.innerHTML = option + ' <svg class="w-2.5 h-2.5 ms-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4" /></svg>';
+            currentSelection = option;
+            console.log(option)
+            // Close the dropdown (optional)
+            document.getElementById('dropdown').classList.add('hidden');
+            button.focus();
+        }
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/datepicker.min.js"></script>
+    <script src="/static/main.js"></script>
+</body>
+
+</html>

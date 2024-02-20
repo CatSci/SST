@@ -53,14 +53,14 @@ def filter_dataframe(df: pd.DataFrame) -> pd.DataFrame:
     return df
 
 def filter_y_axis():
-    values = ['rt_min', 'tailing', 'area', 'height']
+    values = ['RT [min]', 'Tailing']
     y_label = st.selectbox('Select data for Y axis', (values))
 
     return y_label
 
 
 def filter_x_axis():
-    values = ['date']
+    values = ['date_format']
     x_label = st.selectbox('Select data for X axis', (values))
 
     return x_label
