@@ -24,13 +24,12 @@ def convert_date_format(date_range):
 def get_data(dates, hostname):
 
     if len(dates) == 2:
-        # st.write(e_date)
         
         headers = {
-        'Authorization': f'Token {token}',
+        'Authorization': f'Token {st.secrets["token"]}',
         'Content-Type': 'application/json',
         }
-        updated_url = url + "start_date=" + dates[0] + "&" + "end_date=" + dates[1] + "&" + "hostname=" + hostname
+        updated_url = st.secrets["url"] + "start_date=" + dates[0] + "&" + "end_date=" + dates[1] + "&" + "hostname=" + hostname
         
         response = requests.get(updated_url, headers=headers)
         # Check the response status code
